@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+
+{% block title %}Train {{ model_type|title }} Model - Data Analysis Platform{% endblock %}
+
+{% block content %}
+{% if model_trained %}
+    <!-- Model Results Card -->
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card">
+                <div class="card-header bg-success text-white text-center py-3">
+                    <h4 class="mb-0">
+                        <i class="fas fa-check-circle me-2"></i>Model Trained Successfully
+                    </h4>
+                </div>
+                <div class="card-body text-center p-4">
+                    <div class="mb-4">
+                        <p class="mb-2"><strong>Model:</strong> {{ model_type|title }}</p>
+                        <p class="mb-0">
+                            <strong>Type:</strong> 
+                            {% if model_type in 'linear,polynomial,lasso,ridge,svm,random_forest' %}
+                                Regression
+                            {% else %}
+                                Classification
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    <div class="bg-light rounded p-4 mb-4">
+                        {% if model_type in 'linear,polynomial,lasso,ridge,svm,random_forest' %}
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-chart-line me-2"></i>Regression Metrics
+                            </h5>
+                            {% for metric, value in metrics.items %}
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fw-bold">{{ metric }}:</span>
+                                    <span class="badge bg-primary fs-6">{{ value }}</span>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <h5 class="text-success mb-3">
+                                <i class="fas fa-tags me-2"></i>Classification Metrics
+                            </h5>
+                            {% for metric, value in metrics.items %}
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="fw-bold">{{ metric }}:</span>
+                                    <span class="badge bg-success fs-6">{{ value }}</span>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid">
+                        <a href="{% url 'data_options' %}" class="btn btn-outline-secondary btn-lg">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Options
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <!-- Model Training Form -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cogs me-2"></i>Train {{ model_type|title }} 
+                        ({% if model_type in 'linear,polynomial,lasso,ridge,svm,random_forest' %}Regression{% else %}Classification{% endif %})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Guidance Alert -->
+                    {% if model_type in 'linear,polynomial,lasso,ridge,svm,random_forest' %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Regression Model:</strong> Select a <strong>continuous numerical</strong> target column (like Amount, Price).
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Classification Model:</strong> Select a <strong>categorical</strong> target column (like Gender, Status).
+                        </div>
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-check-square me-2"></i>Select Feature Columns:
+                            </label>
+                            <div class="row">
+                                {% for column in columns %}
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="feature_columns" value="{{ column }}" id="feature_{{ forloop.counter }}">
+                                            <label class="form-check-label" for="feature_{{ forloop.counter }}">
+                                                {{ column }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-bullseye me-2"></i>Select Target Column:
+                            </label>
+                            <select name="target_column" class="form-select" required>
+                                <option value="">Choose Target Column...</option>
+                                {% for column in columns %}
+                                    <option value="{{ column }}">{{ column }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">
+                                {% if model_type in 'linear,polynomial,lasso,ridge,svm,random_forest' %}
+                                    Choose a numerical column with continuous values (e.g., Amount, Price)
+                                {% else %}
+                                    Choose a categorical column (e.g., Gender, Product_Category, Status)
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-play me-2"></i>Train Model
+                            </button>
+                            <a href="{% url 'ml_algorithms' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to ML Algorithms
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>Quick Guide
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if model_type in 'linear,polynomial,lasso,ridge,svm,random_forest' %}
+                        <h6 class="text-primary">For Regression Models:</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i><strong>Target:</strong> Amount, Price</li>
+                            <li><i class="fas fa-check text-success me-2"></i><strong>Features:</strong> Any relevant columns</li>
+                            <li><i class="fas fa-info-circle text-info me-2"></i><strong>Goal:</strong> Predict numerical values</li>
+                        </ul>
+                        
+                        <h6 class="text-primary mt-3">Example for Diwali Sales:</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Target:</strong> Amount</li>
+                            <li><strong>Features:</strong> Age, Gender, Occupation, Product_Category</li>
+                        </ul>
+                    {% else %}
+                        <h6 class="text-success">For Classification Models:</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i><strong>Target:</strong> Gender, Status</li>
+                            <li><i class="fas fa-check text-success me-2"></i><strong>Features:</strong> Any relevant columns</li>
+                            <li><i class="fas fa-info-circle text-info me-2"></i><strong>Goal:</strong> Predict categories/classes</li>
+                        </ul>
+                        
+                        <h6 class="text-success mt-3">Example for Diwali Sales:</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Target:</strong> Gender or Status</li>
+                            <li><strong>Features:</strong> Age, Amount, Occupation, State</li>
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% endblock %}

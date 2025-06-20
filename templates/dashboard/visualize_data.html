@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">Data Visualization Options</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Select Plot Type:</label>
+                        <select name="plot_type" class="form-select" required>
+                            <option value="">Choose plot type...</option>
+                            <option value="bar">Bar Chart</option>
+                            <option value="violin">Violin Plot</option>
+                            <option value="heatmap">Heatmap</option>
+                            <option value="line">Line Chart</option>
+                            <option value="scatter">Scatter Plot</option>
+                            <option value="box">Boxplot</option>
+                            <option value="hist">Histogram</option>
+                            <option value="pie">Pie Chart</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">X-Axis:</label>
+                        <select name="x_axis" class="form-select" required>
+                            <option value="">Choose column...</option>
+                            {% for column in columns %}
+                                <option value="{{ column }}">{{ column }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Y-Axis:</label>
+                        <select name="y_axis" class="form-select">
+                            <option value="">Choose column...</option>
+                            {% for column in columns %}
+                                <option value="{{ column }}">{{ column }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Color (Optional):</label>
+                        <input type="text" name="color" class="form-control" placeholder="e.g. red, blue, #FF0000">
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">Generate Plot</button>
+                    </div>
+                </form>
+
+                <div class="mt-3 d-grid gap-2">
+                    <a href="{% url 'data_options' %}" class="btn btn-outline-secondary">Back</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        {% if plot_generated %}
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Generated Visualization</h5>
+                </div>
+                <div class="card-body text-center">
+                    <img src="data:image/png;base64,{{ plot_data }}" class="img-fluid" alt="Generated Plot">
+                </div>
+            </div>
+        {% else %}
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-chart-pie fa-5x text-muted mb-3"></i>
+                    <h4 class="text-muted">No Plot Generated Yet</h4>
+                    <p class="text-muted">Select your visualization options and click "Generate Plot".</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

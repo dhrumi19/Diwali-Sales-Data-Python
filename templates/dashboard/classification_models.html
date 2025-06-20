@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Classification Models - Data Analysis Platform{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white text-center py-4">
+                <h3 class="mb-0">
+                    <i class="fas fa-tags me-2"></i>Classification Models
+                </h3>
+            </div>
+            <div class="card-body p-4">
+                <div class="d-grid gap-3">
+                    <a href="{% url 'train_model' 'logistic' %}" class="btn btn-outline-success btn-lg">
+                        <i class="fas fa-chart-pie me-2"></i>Binary
+                    </a>
+                    <a href="{% url 'train_model' 'decision_tree' %}" class="btn btn-outline-success btn-lg">
+                        <i class="fas fa-sitemap me-2"></i>Ordinal
+                    </a>
+                    <a href="{% url 'train_model' 'random_forest' %}" class="btn btn-outline-success btn-lg">
+                        <i class="fas fa-tree me-2"></i>Multiclass
+                    </a>
+                    <a href="{% url 'ml_algorithms' %}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-arrow-left me-2"></i>Back to ML Algorithms
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

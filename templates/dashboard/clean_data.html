@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Clean Data Options</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Choose Cleaning Operation:</label>
+                        {{ form.cleaning_operation }}
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">Apply Cleaning</button>
+                    </div>
+                </form>
+
+                <hr>
+
+                <div class="mt-4">
+                    <h6 class="fw-bold text-warning">Null Counts per Column:</h6>
+                    {% for column, count in null_counts.items %}
+                        <div class="d-flex justify-content-between">
+                            <span>{{ column }}:</span>
+                            <span class="badge bg-warning">{{ count }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="mt-4">
+                    <h6 class="fw-bold">Data Shape:</h6>
+                    <p class="mb-1"><strong>Original Shape:</strong> {{ original_shape }}</p>
+                    <p class="mb-0"><strong>After Cleaning:</strong> {{ cleaned_shape }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Cleaned Data Preview</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    {{ data_preview|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-12 text-center">
+        <a href="{% url 'data_options' %}" class="btn btn-outline-secondary">Back to Data Options</a>
+    </div>
+</div>
+{% endblock %}

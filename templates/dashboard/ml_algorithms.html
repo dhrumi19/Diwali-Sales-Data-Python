@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white text-center py-4">
+                <h3 class="mb-0">Machine Learning Algorithms</h3>
+            </div>
+            <div class="card-body p-4">
+                <div class="d-grid gap-3">
+                    <a href="{% url 'regression_models' %}" class="btn btn-outline-primary btn-lg">
+                        Regression Models
+                    </a>
+                    <a href="{% url 'classification_models' %}" class="btn btn-outline-primary btn-lg">
+                        Classification Models
+                    </a>
+                    <a href="{% url 'data_options' %}" class="btn btn-outline-secondary btn-lg">
+                        Back to Data Options
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome - Data Analysis Platform{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold text-white mb-3">
+                Welcome to Data Analysis Platform
+            </h1>
+            <p class="lead text-white-50">
+                Upload your dataset to start cleaning, visualizing, and applying machine learning algorithms for insightful analysis
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-primary text-white text-center py-4">
+                <h3 class="mb-0">
+                    <i class="fas fa-upload me-2"></i>Upload CSV File
+                </h3>
+            </div>
+            <div class="card-body p-5">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label for="{{ form.name.id_for_label }}" class="form-label fw-bold">
+                            Dataset Name
+                        </label>
+                        {{ form.name }}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.file.id_for_label }}" class="form-label fw-bold">
+                            Choose CSV File
+                        </label>
+                        {{ form.file }}
+                        <div class="form-text">
+                            Please upload a CSV file for analysis
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-cloud-upload-alt me-2"></i>Upload & Continue
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

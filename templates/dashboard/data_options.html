@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white text-center py-4">
+                <h3 class="mb-0">
+                    <i class="fas fa-cog me-2"></i>Select an Action
+                </h3>
+            </div>
+            <div class="card-body p-4">
+                <div class="d-grid gap-3">
+                    <a href="{% url 'clean_data' %}" class="btn btn-outline-primary btn-lg">
+                        Clean Data
+                    </a>
+                    <a href="{% url 'visualize_data' %}" class="btn btn-outline-primary btn-lg">
+                        Visualize Data
+                    </a>
+                    <a href="{% url 'ml_algorithms' %}" class="btn btn-outline-primary btn-lg">
+                        Machine Learning Algorithms
+                    </a>
+                    <a href="{% url 'home' %}" class="btn btn-outline-secondary btn-lg">
+                        Back
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
